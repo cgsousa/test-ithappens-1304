@@ -1,0 +1,55 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="001-main" author="cgonzaga.sousa">
+        <sql>
+                create table filial (
+                    ID                  INTEGER PRIMARY KEY AUTO_INCREMENT,
+                    DESCRICAO           VARCHAR(100)
+                );
+
+                create table produto(
+                    ID                  INTEGER PRIMARY KEY AUTO_INCREMENT,
+                    COD_BARRAS          VARCHAR(14),
+                    DESCRICAO           VARCHAR(100)
+                );
+                
+                create table estoque (                    
+                    FILIAL_ID           INTEGER ,
+                    PRODUTO_ID			INTEGER ,
+                    SALDO				INTEGER ,                    
+                );
+
+                create table pedido_estoque (
+                    ID                  INTEGER PRIMARY KEY AUTO_INCREMENT,
+                    FILIAL_ID          	INTEGER,
+                    CLIENTE_ID         	INTEGER,
+                    USUARIO_ID         	SMALLINT,
+                    TIPO	        	VARCHAR(20),
+                    OBS					VARCHAR(250),
+                    VALOR_TOTAL			NUMERIC(10,2)
+                );
+
+                create table itens_pedido (
+                    ID                  INTEGER PRIMARY KEY AUTO_INCREMENT,
+                    PEDIDO_ESTOQUE_ID   INTEGER,
+                    PRODUTO_ID          INTEGER,
+                    STATUS              VARCHAR(20),
+                    QUANTIDADE			INTEGER,
+                    VALOR_UNITARIO		NUMERIC(8,2)
+                    VALOR_TOTAL			NUMERIC(8,2)
+                );
+                
+                create table forma_pagamento (
+                    ID                  INTEGER PRIMARY KEY AUTO_INCREMENT,
+                    PEDIDO_ESTOQUE_ID   INTEGER,
+                    PAGAMENTO	        SMALLINT,
+                    VALOR				NUMERIC(10,2)
+                );                
+
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
