@@ -24,6 +24,7 @@ import br.com.ithappens.teste.repository.EstoqueRepository;
 import br.com.ithappens.teste.repository.FormaPagamentoRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
 //import javax.validation.Valid;
@@ -127,17 +128,37 @@ public class PedidoEstoqueService
 
     public PedidoEstoque finalizarPedidoEstoque(FormaPagamentoDTO formaPagamentoDTO)
     {
-        Optional<PedidoEstoque> optionalPedidoEstoque = this.pedidoEstoqueRepository.findById(formaPagamentoDTO.getPedido_id());
-
-        if (!optionalPedidoEstoque.isPresent())
+    	Optional<PedidoEstoque> optionalPedidoEstoque = this.pedidoEstoqueRepository.findById(formaPagamentoDTO.getPedido_id());
+    	if (!optionalPedidoEstoque.isPresent())
         {
             throw new IllegalArgumentException("Não existe pedido com este código na base");
         }
-
-        PedidoEstoque pedidoEstoque = optionalPedidoEstoque.get();
-        //pedidoEstoque.getListaItensPedido().
-        //pedidoEstoque.setFilial(optionalFilial.get());
-        //pedidoEstoque.setUsuario(optionalUsuario.get());
+    	    	
+    	PedidoEstoque pedidoEstoque = optionalPedidoEstoque.get();
+    	    	
+    	//
+    	// valida itens
+    	if(pedidoEstoque.getListaItensPedido().isEmpty())
+        {
+            throw new IllegalArgumentException("Não existe itens para finalizar o pedido");
+        }    	
+    	
+    	//
+    	// totaliza pedido    	
+    	Double valorTotal = 0.0;    
+    	for ( ItensPedido i : pedidoEstoque.getListaItensPedido()) 
+    	{ 
+    		valorTotal +=i.getQuantidade() * i.getValorUnitario(); 
+    	}    	    	
+    	pedidoEstoque.setValorTotal(valorTotal);
+    	
+    	//
+    	// seta forma de pagamento
+    	FormaPagamento formaPagamento = new FormaPagamento();
+    	formaPagamento.setPedidoEstoque(pedidoEstoque);    	
+    	formaPagamento.setPagamento(formaPagamentoDTO.getPagamento());
+    	this.formaPagamentoRepository.save(formaPagamento);
+    	
         return this.pedidoEstoqueRepository.save(pedidoEstoque);
 
     }
@@ -146,15 +167,35 @@ public class PedidoEstoqueService
     {
         Optional<PedidoEstoque> optionalPedidoEstoque = this.pedidoEstoqueRepository.findById(itemPedidoEstoqueDTO.getPedido_id());
 
-        if (!optionalPedidoEstoque.isPresent())
+        if(!optionalPedidoEstoque.isPresent())        	
         {
             throw new IllegalArgumentException("Não existe pedido com este código na base");
         }
         
+        //
+        // chk item de entrada
+        boolean entrada = optionalPedidoEstoque.get().getTipoPedido() == TipoPedido.ENTRADA;        
+        
+        //
+        // valida qtde
+        if(itemPedidoEstoqueDTO.getQuantidade()>0)
+        {
+        	//
+        	// chk estoque
+        	//Optional<Estoque> optionalEstoque = this.estoqueRepository.findById(itemPedidoEstoqueDTO.getPedido_id());
+        	//if(!entrada)
+        	//{
+        	//	throw new IllegalArgumentException("Ainda não implementado");
+        	//}
+        }else {
+        	throw new IllegalArgumentException("Não permite quantidade zerada");
+        }
+        
+                
         Optional<Produto> optionalProduto = this.produtoRepository.findById(itemPedidoEstoqueDTO.getProduto().getId());
         //
         // produto inexistente
-        if (!optionalProduto.isPresent())
+        if(!optionalProduto.isPresent())
         {
         	//
         	// inclui novo produto
@@ -162,9 +203,29 @@ public class PedidoEstoqueService
         	produto.setCod_barras(itemPedidoEstoqueDTO.getProduto().getCodigo_barras());
         	produto.setDescricao(itemPedidoEstoqueDTO.getProduto().getDescricao());
         	this.produtoRepository.save(produto) ; 
+        	
         	optionalProduto.get().setId(produto.getId());
         	optionalProduto.get().setCod_barras(produto.getCod_barras());
         	optionalProduto.get().setDescricao(produto.getDescricao());
+        	        	
+        	//
+        	// inicializa o estoque do produto na filial
+        	Estoque estoque = new Estoque();
+        	estoque.setFilial(optionalPedidoEstoque.get().getFilial());
+        	estoque.setSaldo(itemPedidoEstoqueDTO.getQuantidade());
+        	this.estoqueRepository.save(estoque);
+        	
+        //
+        // produto existente        	
+        }else{
+        	//
+        	// soma estoque do produto na filial
+        	if(entrada)
+        	{
+        		//
+        		//        		
+        		//Estoque estoque = this.estoqueRepository.findById(id)
+        	}
         }
                 
         ItensPedido itensPedido = new ItensPedido();
@@ -172,12 +233,7 @@ public class PedidoEstoqueService
         itensPedido.setProduto(optionalProduto.get());
         itensPedido.setStatus(StatusItemPedido.ATIVO);
         itensPedido.setQuantidade(itemPedidoEstoqueDTO.getQuantidade());
-        itensPedido.setValorUnitario(itemPedidoEstoqueDTO.getValorUnitario());
-        
-        //
-        // atualiza estoque        
-        Estoque estoque = new Estoque();
-        
+        itensPedido.setValorUnitario(itemPedidoEstoqueDTO.getValorUnitario());                
     	return this.itemPedidoEstoqueRepository.save(itensPedido);
     }
     

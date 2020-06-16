@@ -24,12 +24,13 @@
                     DESCRICAO           VARCHAR(100)
                 );
                 
-                create table estoque (                    
-                	ID                  INTEGER PRIMARY KEY AUTO_INCREMENT,
-                    FILIAL_ID           INTEGER ,
-                    PRODUTO_ID			INTEGER ,
-                    SALDO				INTEGER ,                    
-                );
+                create table estoque (                                    	
+                	ID                  INTEGER AUTO_INCREMENT,
+                    FILIAL_ID           INTEGER NOT NULL ,
+                    PRODUTO_ID			INTEGER NOT NULL ,
+                    SALDO				INTEGER NOT NULL ,
+                  	CONSTRAINT pk_estoque00 PRIMARY KEY (FILIAL_ID, PRODUTO_ID)             
+                );                
 
                 create table pedido_estoque (
                     ID                  INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -53,7 +54,7 @@
                 create table forma_pagamento (
                     ID                  INTEGER PRIMARY KEY AUTO_INCREMENT,
                     PEDIDO_ESTOQUE_ID   INTEGER,
-                    PAGAMENTO	        VARCHAR(20),
+                    PAGAMENTO	        SMALLINT,
                     VALOR				NUMERIC(10,2)
                 );                
 

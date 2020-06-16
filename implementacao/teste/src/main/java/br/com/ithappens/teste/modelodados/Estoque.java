@@ -10,6 +10,7 @@ import lombok.Data;
 
 @Data
 @Entity
+
 public class Estoque
 {
     @Id

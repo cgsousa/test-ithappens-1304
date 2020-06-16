@@ -67,15 +67,14 @@ public class PedidoEstoqueController
     {
         return this.pedidoEstoqueService.adicionarItemPedidoEstoque(itemPedidoEstoqueDTO);
     }
-
-    /*
-    @PatchMapping("/pedido")
+    
+    //@PatchMapping("/pedido")
+    @PutMapping("/pedido")
     @ResponseStatus(HttpStatus.OK)
     public PedidoEstoque finalizarPedidoEstoque(@Valid @RequestBody FormaPagamentoDTO formaPagamentoDTO)
     {
         return this.pedidoEstoqueService.finalizarPedidoEstoque(formaPagamentoDTO);
     }
-    */
     
     
 }

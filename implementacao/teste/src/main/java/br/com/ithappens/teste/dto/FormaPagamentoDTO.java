@@ -1,5 +1,7 @@
 package br.com.ithappens.teste.dto;
 
+import br.com.ithappens.teste.enums.StatusFormaPagamento;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +10,6 @@ import lombok.Setter;
 public class FormaPagamentoDTO 
 {
 	private Long pedido_id;
-	private String pagamento ;    
+	private StatusFormaPagamento pagamento ;    
     private Double valor;    
 }
