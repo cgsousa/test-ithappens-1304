@@ -4,6 +4,7 @@ import br.com.ithappens.teste.enums.TipoPedido;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -37,11 +38,16 @@ public class PedidoEstoque
     private Cliente cliente;
         
     @Enumerated(EnumType.STRING)
+    @Column(name = "tipo")
     private TipoPedido tipoPedido;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pedidoEstoque", fetch = FetchType.EAGER)
     private List<ItensPedido> listaItensPedido;
+    
+    private String observacao; 
+    
+    private Double valorTotal;
         
-    private LocalDateTime dataPedido;
+    //private LocalDateTime dataPedido;
 
 }

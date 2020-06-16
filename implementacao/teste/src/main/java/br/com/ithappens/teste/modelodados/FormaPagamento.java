@@ -1,10 +1,8 @@
 package br.com.ithappens.teste.modelodados;
 
-import br.com.ithappens.teste.enums.StatusItemPedido;
+import br.com.ithappens.teste.enums.StatusFormaPagamento;
 
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,8 +13,9 @@ import lombok.Data;
 
 @Data
 @Entity
-public class ItensPedido
+public class FormaPagamento 
 {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,17 +24,8 @@ public class ItensPedido
     @JoinColumn(name = "pedido_estoque_id")
     private PedidoEstoque pedidoEstoque;    
     
-    @ManyToOne
-    @JoinColumn(name = "produto_id")
-    private Produto produto;
+    private StatusFormaPagamento pagamento;
     
-    @Enumerated(EnumType.STRING)
-    private  StatusItemPedido status;
-    
-    private Integer quantidade;
-    
-    private Double valorUnitario ;
-    
-    //private Double valorTotal ;
-        
+    private Double valor ;
+	
 }

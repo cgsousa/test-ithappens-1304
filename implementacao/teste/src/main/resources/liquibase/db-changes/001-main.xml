@@ -10,6 +10,14 @@
                     DESCRICAO           VARCHAR(100)
                 );
 
+                create table usuario (
+                    ID                  INTEGER PRIMARY KEY AUTO_INCREMENT
+                );
+
+                create table cliente (
+                    ID                  INTEGER PRIMARY KEY AUTO_INCREMENT
+                );
+
                 create table produto(
                     ID                  INTEGER PRIMARY KEY AUTO_INCREMENT,
                     COD_BARRAS          VARCHAR(14),
@@ -17,6 +25,7 @@
                 );
                 
                 create table estoque (                    
+                	ID                  INTEGER PRIMARY KEY AUTO_INCREMENT,
                     FILIAL_ID           INTEGER ,
                     PRODUTO_ID			INTEGER ,
                     SALDO				INTEGER ,                    
@@ -28,7 +37,7 @@
                     CLIENTE_ID         	INTEGER,
                     USUARIO_ID         	SMALLINT,
                     TIPO	        	VARCHAR(20),
-                    OBS					VARCHAR(250),
+                    OBSERVACAO			VARCHAR(250),
                     VALOR_TOTAL			NUMERIC(10,2)
                 );
 
@@ -38,14 +47,13 @@
                     PRODUTO_ID          INTEGER,
                     STATUS              VARCHAR(20),
                     QUANTIDADE			INTEGER,
-                    VALOR_UNITARIO		NUMERIC(8,2)
-                    VALOR_TOTAL			NUMERIC(8,2)
+                    VALOR_UNITARIO		NUMERIC(10,2)
                 );
                 
                 create table forma_pagamento (
                     ID                  INTEGER PRIMARY KEY AUTO_INCREMENT,
                     PEDIDO_ESTOQUE_ID   INTEGER,
-                    PAGAMENTO	        SMALLINT,
+                    PAGAMENTO	        VARCHAR(20),
                     VALOR				NUMERIC(10,2)
                 );                
 

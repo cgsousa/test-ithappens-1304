@@ -6,6 +6,8 @@
     <changeSet id="001-main" author="cgonzaga.sousa">
         <sql>
             insert into filial (DESCRICAO) values ('MATEUS COHAMA');
+            insert into usuario (ID) values (1);
+            insert into cliente (ID) values (1);
         </sql>
     </changeSet>
 
